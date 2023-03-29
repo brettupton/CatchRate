@@ -7,7 +7,10 @@ module.exports = {
     mode: prod ? 'production' : 'development',
     entry: './src/index.tsx',
     output: {
-        path: __dirname + '/dist/',
+        path: __dirname + '/build/',
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     module: {
         rules: [
@@ -44,6 +47,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+            favicon: './images/pokeball.png'
         }),
         new MiniCssExtractPlugin(),
     ],
