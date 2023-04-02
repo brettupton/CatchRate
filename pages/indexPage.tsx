@@ -19,6 +19,11 @@ export const IndexPage = () => {
                     <Link to="rng">RNG</Link>
                 </div>
             </div>
+            <div className="row pt-4">
+                <div className="col">
+                    <Link to="types">Types</Link>
+                </div>
+            </div>
         </div>
     )
 }

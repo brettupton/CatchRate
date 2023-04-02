@@ -6,6 +6,7 @@ import { IndexPage } from '../pages/indexPage'
 import { Gen1HomePage } from '../pages/gen1_home'
 import { Gen1CatchRate } from '../pages/gen1_cr'
 import { RNGTest } from '../pages/rng'
+import { TypeEffectiveness } from '../pages/typeEffectiveness'
 
 export default function App() {
     return (
@@ -17,6 +18,7 @@ export default function App() {
                         <Route path="catchrate" element={<Gen1CatchRate />} />
                     </Route>
                     <Route path="/rng" element={<RNGTest />} />
+                    <Route path="/types" element={<TypeEffectiveness />} />
                 </Route>
             </Routes>
         </BrowserRouter>
