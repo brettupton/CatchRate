@@ -1,6 +1,6 @@
-# Pokemon Catch Rate
+# Pokemon Information
 
-Fun little project to run catch rate simulations for the Pokemon games 
+Fun little project to simulate various aspects of the Pokemon games in a browser
 
 ## Credits
 https://www.dragonflycave.com
