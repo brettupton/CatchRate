@@ -17,8 +17,7 @@ export const TypeEffectiveness = () => {
         types: [],
         sprite: ""
     })
-    const [selectedType, setSelectedType] = useState(0)
-    const [typeDamage, setTypeDamage] = useState(5)
+    const [typeDamageArray, setTypeDamageArray] = useState<number[]>([])
 
     useEffect(() => {
         window.addEventListener("keypress", handleEnterPress)
@@ -31,9 +30,13 @@ export const TypeEffectiveness = () => {
     useEffect(() => {
         if (selectedPokemon) {
             fetchPokemonData()
-            checkTypeEffectiveness(selectedType)
         }
     }, [selectedPokemon])
+
+    useEffect(() => {
+        if (enemyPokemon.types.length > 0)
+            checkAllTypes()
+    }, [enemyPokemon])
 
     const handleEnterPress = (key: KeyboardEvent) => {
         const selectPokemonButton = document.getElementById('selectPokemon')
@@ -70,15 +73,8 @@ export const TypeEffectiveness = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { value, id } = e.currentTarget
-
         if (id === 'enemyPokemon') {
             setSelectedPokemonAttempt(value)
-            return
-        }
-
-        if (id === "type") {
-            setSelectedType(Number(value))
-            checkTypeEffectiveness(Number(value))
             return
         }
     }
@@ -88,13 +84,14 @@ export const TypeEffectiveness = () => {
 
         if (allPokemon.includes(pokemon)) {
             setSelectedPokemon(pokemon)
+            setTypeDamageArray([])
             return
         }
         console.log('Pokemon not found')
     }
 
     const checkTypeEffectiveness = (typeNum: number) => {
-        const moveType = typeNum || selectedType
+        const moveType = typeNum
         const enemyPokemonTypes = enemyPokemon.types
         let damage = 1
 
@@ -126,11 +123,18 @@ export const TypeEffectiveness = () => {
                 damage = damage * 2
             }
         }
-        setTypeDamage(damage)
+        return damage
+    }
+
+    const checkAllTypes = () => {
+        for (let i = 0; i < (Object.keys(Types).length / 2); i++) {
+            const result = checkTypeEffectiveness(i)
+            setTypeDamageArray((prevArray) => [...prevArray, result])
+        }
     }
 
     return (
-        <div className="container text-center">
+        <div className="container text-center h-100">
             <div className="row pt-5 justify-content-center">
                 <div className="col-3">
                     <input onChange={handleInputChange} id="enemyPokemon" placeholder="Enter Pokemon" />
@@ -160,28 +164,28 @@ export const TypeEffectiveness = () => {
                     )
                 })}
             </div>
-            <div className="row pt-4">
-                <div className="col">
-                    <label htmlFor="type">Move Type</label>
-                    <select onChange={handleInputChange} id="type" defaultValue={Types.Bug}>
-                        {Object.keys(EffectivenessTable).map((type, index) => {
+            {typeDamageArray.length > 0 &&
+                <div className="contaner pt-5">
+                    <div className="row pt-2 justify-content-center w-50 mx-auto">
+                        {typeDamageArray.map((damage, index) => {
                             return (
-                                <option value={index} key={type}>{Types[index]}</option>
+                                <div className={`col-3 border border-2 border-${damage < 1 ? 'danger' : damage === 1 ? 'light' : 'success'} m-2`} key={index}>
+                                    <div className="row">
+                                        <div className="col">
+                                            {Types[index]}
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col">
+                                            {damage}x
+                                        </div>
+                                    </div>
+                                </div>
                             )
                         })}
-                    </select>
+                    </div>
                 </div>
-            </div>
-            <div className="row pt-1">
-                <div className="col">
-                    <button className="btn btn-warning" onClick={() => checkTypeEffectiveness}>Check Type</button>
-                </div>
-            </div>
-            <div className="row pt-3">
-                <div className="col">
-                    {typeDamage < 5 && `${Types[selectedType]} will be ${typeDamage}x effective!`}
-                </div>
-            </div>
+            }
         </div>
     )
 }
